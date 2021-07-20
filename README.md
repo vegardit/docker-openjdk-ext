@@ -4,7 +4,6 @@
 [![License](https://img.shields.io/github/license/vegardit/docker-openjdk-ext.svg?label=license)](#license)
 [![Docker Pulls](https://img.shields.io/docker/pulls/vegardit/openjdk-ext.svg)](https://hub.docker.com/r/vegardit/openjdk-ext)
 [![Docker Stars](https://img.shields.io/docker/stars/vegardit/openjdk-ext.svg)](https://hub.docker.com/r/vegardit/openjdk-ext)
-[![Docker Image Size](https://images.microbadger.com/badges/image/vegardit/openjdk-ext.svg)](https://hub.docker.com/r/vegardit/openjdk-ext)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md)
 
 1. [What is it?](#what-is-it)

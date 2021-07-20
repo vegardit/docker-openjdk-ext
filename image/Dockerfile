@@ -1,4 +1,5 @@
-# Copyright 2020 by Vegard IT GmbH, Germany, https://vegardit.com
+#syntax=docker/dockerfile:1.2
+# Copyright 2020-2021 by Vegard IT GmbH, Germany, https://vegardit.com
 # SPDX-License-Identifier: Apache-2.0
 #
 # Author: Sebastian Thomschke, Vegard IT GmbH
@@ -25,15 +26,10 @@ ARG LC_ALL=C
 
 ARG BASE_LAYER_CACHE_KEY
 
-RUN \
+RUN --mount=type=bind,source=.shared,target=/mnt/shared \
   set -eu && \
-  echo "#################################################" && \
-  echo "Installing OS updates..." && \
-  echo "#################################################" && \
-  apt-get update -y && \
-  # https://github.com/phusion/baseimage-docker/issues/319
-  apt-get install --no-install-recommends -y apt-utils 2> >( grep -v 'debconf: delaying package configuration, since apt-utils is not installed' >&2 ) && \
-  apt-get upgrade -y && \
+  /mnt/shared/cmd/debian-install-os-updates.sh && \
+  /mnt/shared/cmd/debian-install-support-tools.sh && \
   #
   echo "#################################################" && \
   echo "Installing tools..." && \
@@ -51,41 +47,14 @@ RUN \
   strip -s /usr/bin/docker && \
   apt-get remove -y binutils && \
   #
-  if [ "${DEBUG_BUILD}" = "1" ]; then \
-     echo "#################################################" && \
-     echo "Installing debugging tools..." && \
-     echo "#################################################" && \
-     apt-get install --no-install-recommends -y libcomerr2 mc && \
-     apt-get install --no-install-recommends -y htop vim && \
-     echo -e 'set ignorecase\n\
-set showmatch\n\
-set novisualbell\n\
-set noerrorbells\n\
-syntax enable\n\
-set mouse-=a' > ~/.vimrc; \
-  fi && \
-  #
-  echo "#################################################" && \
-  echo "apt-get clean up..." && \
-  echo "#################################################" && \
-  apt-get remove apt-utils -y && \
-  apt-get clean autoclean && \
-  apt-get autoremove --purge -y && \
-  #
-  echo "#################################################" && \
-  echo "Removing logs, caches and temp files..." && \
-  echo "#################################################" && \
-  rm -rf /var/cache/{apt,debconf} \
-     /var/lib/apt/lists/* \
-     /var/log/{apt,alternatives.log,bootstrap.log,dpkg.log} \
-     /tmp/* /var/tmp/*
+  /mnt/shared/cmd/debian-cleanup.sh
 
 ARG BUILD_DATE
 ARG GIT_COMMIT_HASH
 ARG GIT_REPO_URL
 
 LABEL \
-  org.label-schema.schema-version="1.0" \
-  org.label-schema.build-date=$BUILD_DATE \
-  org.label-schema.vcs-ref=$GIT_COMMIT_HASH \
-  org.label-schema.vcs-url=$GIT_REPO_URL
+ org.label-schema.schema-version="1.0" \
+ org.label-schema.build-date=$BUILD_DATE \
+ org.label-schema.vcs-ref=$GIT_COMMIT_HASH \
+ org.label-schema.vcs-url=$GIT_REPO_URL

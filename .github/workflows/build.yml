@@ -1,8 +1,19 @@
+# Copyright 2020-2021 by Vegard IT GmbH, Germany, https://vegardit.com
+# SPDX-License-Identifier: Apache-2.0
+#
+# Author: Sebastian Thomschke, Vegard IT GmbH
+#
+# https://github.com/vegardit/docker-openjdk-ext
+#
 # https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions
 name: Build
 
 on:
   push:
+    branches:
+    - '**'
+    tags-ignore:
+    - '**'
     paths-ignore:
     - '**/*.md'
   schedule:
@@ -49,12 +60,12 @@ jobs:
       shell: bash
       env:
         DOCKER_BASE_IMAGE: ${{ matrix.DOCKER_BASE_IMAGE }}
-        DOCKER_PUSH: 1
         DOCKER_REGISTRY: docker.io
         DOCKER_REGISTRY_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
         DOCKER_REGISTRY_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
-        MICROBADGER_TOKEN: ${{ secrets.MICROBADGER_TOKEN }}
       run: |
+        if [ "$GITHUB_REF" == "refs/heads/main" ]; then
+          export DOCKER_PUSH=1
+        fi
         echo "$DOCKER_REGISTRY_TOKEN" | docker login -u="$DOCKER_REGISTRY_USERNAME" "$DOCKER_REGISTRY" --password-stdin
         bash build-image.sh
-        curl -X POST https://hooks.microbadger.com/images/$DOCKER_REPO/$MICROBADGER_TOKEN || true;
