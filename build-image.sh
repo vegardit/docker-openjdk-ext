@@ -31,10 +31,10 @@ if [[ $OSTYPE == "cygwin" || $OSTYPE == "msys" ]]; then
    project_root=$(cygpath -w "$project_root")
 fi
 
+docker image pull $base_image_name
 DOCKER_BUILDKIT=1 docker build "$project_root" \
    --file "image/Dockerfile" \
    --progress=plain \
-   --pull \
    --build-arg INSTALL_SUPPORT_TOOLS=${INSTALL_SUPPORT_TOOLS:-0} \
    `# using the current date as value for BASE_LAYER_CACHE_KEY, i.e. the base layer cache (that holds system packages with security updates) will be invalidate once per day` \
    --build-arg BASE_LAYER_CACHE_KEY=$base_layer_cache_key \
