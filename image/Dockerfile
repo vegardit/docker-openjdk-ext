@@ -1,10 +1,9 @@
 #syntax=docker/dockerfile:1.2
-# Copyright 2020-2021 by Vegard IT GmbH, Germany, https://vegardit.com
+#
+# SPDX-FileCopyrightText: © Vegard IT GmbH (https://vegardit.com)
+# SPDX-FileContributor: Sebastian Thomschke
 # SPDX-License-Identifier: Apache-2.0
-#
-# Author: Sebastian Thomschke, Vegard IT GmbH
-#
-# https://github.com/vegardit/docker-openjdk-ext
+# SPDX-ArtifactOfProjectHomePage: https://github.com/vegardit/docker-openjdk-ext
 #
 
 # https://github.com/docker-library/openjdk/blob/master/8/jre/slim-buster/Dockerfile
